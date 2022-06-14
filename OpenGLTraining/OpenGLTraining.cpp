@@ -1,22 +1,36 @@
-// OpenGLTraining.cpp : This file contains the 'main' function. Program execution begins and ends there.
-//
+// OpenGLTraining.cpp
+
+// C++
 #include <iostream>
 #include <stdlib.h>
 
+// OpenGL
 #include <glad/glad.h>
 
+// Project headers
 #include "Headers/window.h"
-#include "Headers/callbacks.h"
+#include "Headers/imgui_menu.h"
+#include "Headers/rendering.h"
+
+// Assimp
+#include <assimp/Importer.hpp>		// C++ importer interface
+#include <assimp/scene.h>			// Output data structure
+#include <assimp/postprocess.h>		// Post processing flags
 
 void InitGlad(Window& window);
-void MainLoop(Window& window);
+void MainLoop(Window& window, ImguiMenu& menu, Rendering& render);
 
 int main()
 {
 	try {
-		Window window = Window();
+		Window window;
 		InitGlad(window);
-		MainLoop(window);
+		ImguiMenu menu(window.window_);
+		Rendering render(window);
+		render.PrepareDataForRendering();
+		render.DefineTexture(menu.menu_data);
+		render.DefineCallbacks();
+		MainLoop(window, menu, render);
 		window.~Window();
 	}
 	catch (const std::exception& e) {
@@ -33,13 +47,27 @@ void InitGlad(Window& window) {
 		throw std::runtime_error("Failed to initialize GLAD");
 	}
 	glViewport(0, 0, 1280, 720);
-	glfwSetFramebufferSizeCallback(window.window_, Callbacks::framebuffer_size_callback);
 }
 
-void MainLoop(Window& window) {
+void MainLoop(Window& window, ImguiMenu& menu, Rendering& render) {
 
 	while (!glfwWindowShouldClose(window.window_))
 	{
+		render.ClearScreen(CLEAR_COLOR_BLACK);
+
+		menu.CreateFrame();
+
+		// Main Logic
+		render.BindMainObjectVertexArray();
+		render.BindMainObjectTexture();
+		render.SetUniformValues(menu.menu_data);
+		render.SetTransformationMatrices();
+		render.CalculateFramerate();
+		render.CheckForInputs();
+		glDrawArrays(GL_TRIANGLES, 0, 6);
+
+		menu.DefineFrameContent();
+
 		glfwSwapBuffers(window.window_);
 		glfwPollEvents();
 	}
