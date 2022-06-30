@@ -1,17 +1,17 @@
-#include "../Headers/shader_setup.h"
+#include "../Headers/shader.h"
 
 #include <iostream>
 
-void ShaderSetup::SetupSingleTriangleShaders() {
+void Shader::SetupShaders(const char* vertex_shader_filename, const char* fragment_shader_filename) {
 
-	shader_files.push_back({ GL_VERTEX_SHADER, "./Source/Shaders/simple_triangle.vert" });
-	shader_files.push_back({ GL_FRAGMENT_SHADER, "./Source/Shaders/simple_triangle.frag" });
+	shader_files.push_back({ GL_VERTEX_SHADER, vertex_shader_filename });
+	shader_files.push_back({ GL_FRAGMENT_SHADER, fragment_shader_filename });
 	shader_files.push_back({ GL_NONE, NULL });
     program = LoadShaders();
     glUseProgram(program);
 }
 
-const GLchar* ShaderSetup::ReadShader(const char* filename)
+const GLchar* Shader::ReadShader(const char* filename)
 {
     FILE* infile;
 
@@ -40,7 +40,7 @@ const GLchar* ShaderSetup::ReadShader(const char* filename)
     }
 }
 
-GLuint ShaderSetup::LoadShaders()
+GLuint Shader::LoadShaders()
 {
     if (shader_files.empty()) { return 0; }
 
@@ -112,4 +112,40 @@ GLuint ShaderSetup::LoadShaders()
     std::cout << "Shaders Loaded correctly!\n";
 
     return program;
+}
+
+void Shader::UseShaderProgram() {
+    glUseProgram(program);
+}
+
+// Uniform functions
+
+void Shader::SetBool(const std::string& name, bool value) const
+{
+    glUniform1i(glGetUniformLocation(program, name.c_str()), (int)value);
+}
+void Shader::SetInt(const std::string& name, int value) const
+{
+    glUniform1i(glGetUniformLocation(program, name.c_str()), value);
+}
+void Shader::SetFloat(const std::string& name, float value) const
+{
+    glUniform1f(glGetUniformLocation(program, name.c_str()), value);
+}
+
+// Subroutines
+
+void Shader::GetSubroutinesIndices(std::vector<std::string> vertex_shader_subroutines, std::vector<std::string> fragment_shader_subroutines) {
+    for (std::string subroutine_name : vertex_shader_subroutines) {
+        GLuint subroutine_index = glGetSubroutineIndex(program, GL_VERTEX_SHADER, subroutine_name.c_str());
+        subroutines_vertex.push_back(std::make_pair(subroutine_index, subroutine_name));
+    }
+    for (std::string subroutine_name : vertex_shader_subroutines) {
+        GLuint subroutine_index = glGetSubroutineIndex(program, GL_FRAGMENT_SHADER, subroutine_name.c_str());
+        subroutines_fragment.push_back(std::make_pair(subroutine_index, subroutine_name));
+    }
+}
+
+void Shader::SetSubroutines() {
+
 }

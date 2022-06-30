@@ -17,7 +17,7 @@ public:
     glm::vec3 right_direction_u;
     float camera_velocity;
     float delta_time;
-    int fps;
+    float fps;
 
     Camera();
     glm::mat4 View();

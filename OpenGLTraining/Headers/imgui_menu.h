@@ -3,25 +3,33 @@
 #define IMGUI_MENU_H
 
 #include <GLFW/glfw3.h>
-#include <glm/vec4.hpp>
+#include <glm/vec3.hpp>
+
+enum RenderModes {Points = 0, Wireframe = 1, Solid = 2};
 
 typedef struct {
-	glm::vec4 triangle_color;
+	int render_mode;
+
+	// Light
+	glm::vec3 light_pos;
+	glm::vec3 light_intensity;
+	int shininess;
 } ImguiMenuData;
 
 class ImguiMenu {
 public:
 	ImguiMenuData menu_data;
 
-
 	ImguiMenu(GLFWwindow* window);
 	~ImguiMenu();
 
 	void CreateFrame();
-	void DefineFrameContent();
+	void DefineFrameContent(float fps);
 
 private:
 	void DefineDefaultMenuData();
+	void RenderingModeContent();
+	void LightningContent();
 };
 
 #endif IMGUI_MENU_H

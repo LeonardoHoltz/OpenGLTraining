@@ -36,9 +36,6 @@
     <ClCompile Include="..\..\..\..\Documents\Visual Studio 2019\Libraries\GLAD\src\glad.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\rendering.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\imgui\imgui_draw.cpp">
       <Filter>Source Files\imgui</Filter>
     </ClCompile>
@@ -63,10 +60,22 @@
     <ClCompile Include="Source\imgui_menu.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\shader_setup.cpp">
+    <ClCompile Include="Source\shader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Source\camera.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\mesh.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\model.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\texture.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Application.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -75,9 +84,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Headers\callbacks.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Headers\rendering.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\imgui\imgui_internal.h">
@@ -110,7 +116,7 @@
     <ClInclude Include="..\imgui\imgui_impl_opengl3_loader.h">
       <Filter>Header Files\imgui</Filter>
     </ClInclude>
-    <ClInclude Include="Headers\shader_setup.h">
+    <ClInclude Include="Headers\shader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Headers\stb_image.h">
@@ -119,12 +125,24 @@
     <ClInclude Include="Headers\camera.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Headers\mesh.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Headers\model.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Headers\texture.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Headers\Application.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Source\Shaders\simple_triangle.vert">
+    <None Include="Source\Shaders\simple_phong.vert">
       <Filter>Source Files\Shaders</Filter>
     </None>
-    <None Include="Source\Shaders\simple_triangle.frag">
+    <None Include="Source\Shaders\simple_phong.frag">
       <Filter>Source Files\Shaders</Filter>
     </None>
   </ItemGroup>

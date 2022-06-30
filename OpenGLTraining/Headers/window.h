@@ -10,6 +10,7 @@ public:
 	
 	Window();
 	~Window();
+	void TerminateWindow();
 };
 
 #endif // WINDOW_H

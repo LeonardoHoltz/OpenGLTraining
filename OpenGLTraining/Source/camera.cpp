@@ -10,7 +10,7 @@ Camera::Camera() :
     right_direction_u(1.0f, 0.0f, 0.0f),
     camera_velocity(5.0f),
     delta_time(0.0),
-    fps(0)
+    fps(0.0f)
 {
 }
 
@@ -114,7 +114,7 @@ void Camera::CalculateFrameRate()
     if (currentTime - lastTime >= 1.0f)
     {
         lastTime = currentTime;
-        fps = (int)frames;
+        fps = frames;
         frames = 0;
     }
 }

@@ -20,5 +20,9 @@ Window::Window() {
 }
 
 Window::~Window() {
+	TerminateWindow();
+}
+
+void Window::TerminateWindow() {
 	glfwTerminate();
 }
