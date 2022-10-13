@@ -77,6 +77,7 @@ void ImguiMenu::LightningContent() {
         ImGui::Text("Light Attenuation:");
         ImGui::Checkbox("On / Off", &menuData.isLightAttenuationOn);
 
+
         ImGui::TreePop();
     }
 }
