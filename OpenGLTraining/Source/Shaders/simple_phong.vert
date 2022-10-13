@@ -9,7 +9,7 @@ layout (location = 5) uniform mat4 projection_matrix;
 
 out vec3 world_position;
 out vec3 world_normal;
-out vec2 fTexCoord;
+out vec2 frag_tex_coord;
 
 void main()
 {
@@ -23,5 +23,5 @@ void main()
     world_position = vec3(model_matrix * homogeneous_position);
     world_normal = vec3(inverse(transpose(model_matrix)) * homogeneous_normal);
 
-    fTexCoord = texture_coordinates;
+    frag_tex_coord = texture_coordinates;
 }

@@ -21,16 +21,26 @@
 class Application {
 private:
 
+	struct SubroutinesIndices {
+		// Light Modifications:
+		GLuint applyAttenuationIndex;
+		GLuint dontAddModificationsIndex;
+	};
+
 	struct ShaderUniformData {
+		// Subroutines
+		SubroutinesIndices subroutineIndices;
+
 		// Matrices
-		glm::mat4 view_matrix;
-		glm::mat4 projection_matrix;
-		glm::mat4 model_matrix;
+		glm::mat4 viewMatrix;
+		glm::mat4 projectionMatrix;
+		glm::mat4 modelMatrix;
 
 		// Light
-		glm::vec3 light_position;
-		glm::vec3 light_intensity;
+		glm::vec3 lightPosition;
+		glm::vec3 lightIntensity;
 		int shininess;
+		bool IsLightAttenuationOn;
 	};
 
 	Window window;
@@ -39,10 +49,12 @@ private:
 	Callbacks* callbacks;
 
 	std::vector<Shader> shaders;
-	ShaderUniformData shader_data;
-	std::vector<Model> models_loaded;
+	ShaderUniformData shaderData;
+	std::vector<Model> modelsLoaded;
 
-	enum AttributePointers { vModelMatrix = 3, vViewMatrix = 4, vProjectionMatrix = 5, fLightIntensity = 6, fShininess = 7, fLightPosition = 8 };
+	// v prefixes for attribute pointers used in the vertex shader, f for the ones used in the fragment shader
+	enum AttributePointers { v_eModelMatrix = 3, v_eViewMatrix = 4, v_eProjectionMatrix = 5, f_eLightIntensity = 6, f_eShininess = 7, f_eLightPosition = 8,
+							 f_eIsLightAttetuationOn = 9 };
 
 	void InitGlad();
 	void MainLoop();
@@ -54,6 +66,7 @@ private:
 	void SetTransformationMatrices();
 	void ApplyMenuOptions();
 	void SetUniformValues();
+	void SetupSubroutines();
 
 public:
 	Application();
