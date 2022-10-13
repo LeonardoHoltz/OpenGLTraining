@@ -25,11 +25,7 @@ out vec4 FragColor;
 const vec3 AMBIENT_COLOR_INTENSITY = vec3(0.3);
 
 // Subroutines
-subroutine vec4 Illumination(vec3 pos, vec3 normal, vec3 observer_pos, vec4 obj_color, vec3 light_pos);
-subroutine uniform Illumination SetColor;
-
 subroutine vec3 LightModification(vec3 light, vec3 light_pos, vec3 frag_pos);
-
 subroutine uniform LightModification ApplyLightModifications;
 
 // Functions
@@ -53,11 +49,12 @@ vec3 SpecularLightBlinnPhong(vec3 light_direction, vec3 view_direction, vec3 nor
 
 vec4 PhongReflectionModel(vec3 pos, vec3 normal, vec3 observer_pos, vec4 obj_color, vec4 specular_map, vec3 light_pos) {
     vec3 l = normalize(observer_pos + light_pos - pos);
+    //vec3 l = normalize(light_pos - pos);
     vec3 n = normalize(normal);
     vec3 v = normalize(observer_pos - pos);
     vec3 r = normalize(-l + 2 * n * dot(n, l));
 
-    vec3 final_light = ApplyLightModifications(light_intensity, light_position, world_position);
+    vec3 final_light = ApplyLightModifications(light_intensity, observer_pos + light_pos, pos);
 
     vec3 ambient_term  = AmbientLight(vec3(obj_color));
     vec3 diffuse_term  = DiffuseLight(n, l, vec3(obj_color), final_light);
@@ -70,10 +67,10 @@ vec4 PhongReflectionModel(vec3 pos, vec3 normal, vec3 observer_pos, vec4 obj_col
 subroutine ( LightModification ) vec3 ApplyAttenuation(vec3 light, vec3 light_pos, vec3 frag_pos) {
     // The values here is following these instructions: https://wiki.ogre3d.org/tiki-index.php?page=-Point+Light+Attenuation
     float Kc = 1.0; // constant term
-    float Kl = 0.35; // linear term
-    float Kq = 0.44; // quadratic term
-    float d = distance(light_pos, frag_pos);
-    return light / (Kq * pow(d,2) + Kl * d + Kc);
+    float Kl = 0.022; // linear term
+    float Kq =  0.0019; // quadratic term
+    float d = length(light_pos - frag_pos);
+    return light / ((Kq * d * d) + (Kl * d) + Kc);
 }
 
 subroutine ( LightModification ) vec3 DontAddModifications(vec3 light, vec3 light_pos, vec3 frag_pos) {
