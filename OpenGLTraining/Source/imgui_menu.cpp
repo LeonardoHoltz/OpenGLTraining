@@ -20,10 +20,10 @@ ImguiMenu::ImguiMenu(GLFWwindow* window) {
 }
 
 void ImguiMenu::DefineDefaultMenuData() {
-    menu_data.render_mode = Solid;
-
-    menu_data.light_intensity = glm::vec3(1.0f, 1.0f, 1.0f);
-    menu_data.shininess = 30;
+    menuData.render_mode = Solid;
+    menuData.lightIntensity = glm::vec3(1.0f, 1.0f, 1.0f);
+    menuData.shininess = 30;
+    menuData.isLightAttenuationOn = false;
 }
 
 void ImguiMenu::CreateFrame() {
@@ -52,26 +52,31 @@ ImguiMenu::~ImguiMenu() {
 
 void ImguiMenu::RenderingModeContent() {
     if (ImGui::TreeNode("Rendering Mode")) {
-        ImGui::RadioButton("Solid", &menu_data.render_mode, Solid); ImGui::SameLine();
-        ImGui::RadioButton("Wireframe", &menu_data.render_mode, Wireframe); ImGui::SameLine();
-        ImGui::RadioButton("Points", &menu_data.render_mode, Points);
+        ImGui::RadioButton("Solid", &menuData.render_mode, Solid); ImGui::SameLine();
+        ImGui::RadioButton("Wireframe", &menuData.render_mode, Wireframe); ImGui::SameLine();
+        ImGui::RadioButton("Points", &menuData.render_mode, Points);
         ImGui::TreePop();
     }
 }
 
 void ImguiMenu::LightningContent() {
     if (ImGui::TreeNode("Lightning")) {
-        ImGui::SliderInt("Shininess", &menu_data.shininess, 1, 50);
+        ImGui::SliderInt("Shininess", &menuData.shininess, 1, 50);
 
         ImGui::PushItemWidth(60.0f);
         ImGui::Text("Light position:"); ImGui::SameLine();
-        ImGui::InputFloat("x", &menu_data.light_pos.x); ImGui::SameLine();
-        ImGui::InputFloat("y", &menu_data.light_pos.y); ImGui::SameLine();
-        ImGui::InputFloat("z", &menu_data.light_pos.z);
+        ImGui::InputFloat("x", &menuData.lightPos.x); ImGui::SameLine();
+        ImGui::InputFloat("y", &menuData.lightPos.y); ImGui::SameLine();
+        ImGui::InputFloat("z", &menuData.lightPos.z);
         ImGui::PopItemWidth();
 
         ImGui::Text("Light Intensity:");
-        ImGui::ColorEdit4("", &menu_data.light_intensity.r, ImGuiColorEditFlags_PickerHueWheel);
+        ImGui::ColorEdit4("", &menuData.lightIntensity.r, ImGuiColorEditFlags_PickerHueWheel);
+        
+
+        ImGui::Text("Light Attenuation:");
+        ImGui::Checkbox("On / Off", &menuData.isLightAttenuationOn);
+
         ImGui::TreePop();
     }
 }

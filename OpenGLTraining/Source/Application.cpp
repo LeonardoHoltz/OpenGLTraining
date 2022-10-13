@@ -26,6 +26,7 @@ int Application::Run() {
 		DefineShaders();
 		LoadScene();
 		callbacks = new Callbacks(window, camera);
+		SetupSubroutines();
 
 		MainLoop();
 		window.TerminateWindow();
@@ -60,11 +61,11 @@ void Application::DefineShaders() {
 
 void Application::LoadScene() {
 	Model model("./Models/backpack/backpack.obj");
-	models_loaded.push_back(model);
+	modelsLoaded.push_back(model);
 }
 
 void Application::DrawScene(Shader shader) {
-	for (Model & model : models_loaded) {
+	for (Model & model : modelsLoaded) {
 		model.Draw(shader);
 	}
 }
@@ -123,18 +124,18 @@ void Application::CheckForInputs() {
 }
 
 void Application::SetTransformationMatrices() {
-	shader_data.view_matrix = camera.View();
-	shader_data.projection_matrix = camera.SetDefaultProjection();
-	shader_data.model_matrix = glm::mat4(1.0f);
+	shaderData.viewMatrix = camera.View();
+	shaderData.projectionMatrix = camera.SetDefaultProjection();
+	shaderData.modelMatrix = glm::mat4(1.0f);
 
-	glUniformMatrix4fv(vViewMatrix, 1, GL_FALSE, glm::value_ptr(shader_data.view_matrix));
-	glUniformMatrix4fv(vProjectionMatrix, 1, GL_FALSE, glm::value_ptr(shader_data.projection_matrix));
-	glUniformMatrix4fv(vModelMatrix, 1, GL_FALSE, glm::value_ptr(shader_data.model_matrix));
+	glUniformMatrix4fv(v_eViewMatrix, 1, GL_FALSE, glm::value_ptr(shaderData.viewMatrix));
+	glUniformMatrix4fv(v_eProjectionMatrix, 1, GL_FALSE, glm::value_ptr(shaderData.projectionMatrix));
+	glUniformMatrix4fv(v_eModelMatrix, 1, GL_FALSE, glm::value_ptr(shaderData.modelMatrix));
 }
 
 void Application::ApplyMenuOptions() {
 	// Render mode:
-	switch (menu.menu_data.render_mode) {
+	switch (menu.menuData.render_mode) {
 	case Points:
 		glPolygonMode(GL_FRONT_AND_BACK, GL_POINT); break;
 	case Wireframe:
@@ -145,14 +146,30 @@ void Application::ApplyMenuOptions() {
 	}
 
 	// Scene light:
-	shader_data.light_intensity = menu.menu_data.light_intensity;
-	shader_data.light_position = menu.menu_data.light_pos;
-	shader_data.shininess = menu.menu_data.shininess;
+	shaderData.lightIntensity = menu.menuData.lightIntensity;
+	shaderData.lightPosition = menu.menuData.lightPos;
+	shaderData.shininess = menu.menuData.shininess;
+	shaderData.IsLightAttenuationOn = menu.menuData.isLightAttenuationOn;
+}
+
+void Application::SetupSubroutines() {
+	Shader mainShader = shaders.front();
+	shaderData.subroutineIndices.applyAttenuationIndex = glGetSubroutineIndex(mainShader.program, GL_FRAGMENT_SHADER, "ApplyAttenuation");
+	shaderData.subroutineIndices.dontAddModificationsIndex = glGetSubroutineIndex(mainShader.program, GL_FRAGMENT_SHADER, "DontAddModifications");
 }
 
 void Application::SetUniformValues() {
-	glUniform3f(fLightIntensity, shader_data.light_intensity.x, shader_data.light_intensity.y, shader_data.light_intensity.z);
-	glUniform3f(fLightPosition, shader_data.light_position.x, shader_data.light_position.y, shader_data.light_position.z);
-	glUniform1i(fShininess, shader_data.shininess);
+	glUniform3f(f_eLightIntensity, shaderData.lightIntensity.x, shaderData.lightIntensity.y, shaderData.lightIntensity.z);
+	glUniform3f(f_eLightPosition, shaderData.lightPosition.x, shaderData.lightPosition.y, shaderData.lightPosition.z);
+	glUniform1i(f_eShininess, shaderData.shininess);
+
+	// Set subroutine to use attenuation or not
+	if (shaderData.IsLightAttenuationOn) {
+		glUniformSubroutinesuiv(GL_FRAGMENT_SHADER, 1, &shaderData.subroutineIndices.applyAttenuationIndex);
+	}
+	else {
+		glUniformSubroutinesuiv(GL_FRAGMENT_SHADER, 1, &shaderData.subroutineIndices.dontAddModificationsIndex);
+	}
+
 	SetTransformationMatrices();
 }

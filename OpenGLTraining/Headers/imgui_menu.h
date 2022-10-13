@@ -11,14 +11,15 @@ typedef struct {
 	int render_mode;
 
 	// Light
-	glm::vec3 light_pos;
-	glm::vec3 light_intensity;
+	glm::vec3 lightPos;
+	glm::vec3 lightIntensity;
 	int shininess;
+	bool isLightAttenuationOn;
 } ImguiMenuData;
 
 class ImguiMenu {
 public:
-	ImguiMenuData menu_data;
+	ImguiMenuData menuData;
 
 	ImguiMenu(GLFWwindow* window);
 	~ImguiMenu();
